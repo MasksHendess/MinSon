@@ -1,5 +1,7 @@
 MinSon Discord bot coded in C#
-Need to add config.json for the bot to work, in project/bin/debug/net.0/
+Need to add config.json for the bot to work, in project/bin/debug/net.0/ ( Not included in repo )
 config.json should contain a token and a prefix.
-token is the bots id. (Thats why im not including it in this repo)
+token is the bots id.
 prefix is what you type before a command, ie to do helloworld command you would type prefixhelloworld
+
+Contact www.maxhendess@gmail.com if you wish to colab or have questions.
