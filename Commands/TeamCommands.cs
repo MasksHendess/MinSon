@@ -2,6 +2,7 @@
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity.Extensions;
+using MinSon.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,37 @@ namespace MinSon.Commands
 {
     public class TeamCommands : BaseCommandModule
     {
+        private readonly MinSonDBContext context;
+
+        public TeamCommands(MinSonDBContext Kontexts)
+        {
+            context = Kontexts;
+        }
+        [Command("dbtest")]
+        public async Task dbtest (CommandContext ctx , string Name)
+        {
+            await context.cards.AddAsync(new Card { name = Name}).ConfigureAwait(false);
+            await context.SaveChangesAsync().ConfigureAwait(false);
+            await ctx.Channel.SendMessageAsync(Name + " added to database").ConfigureAwait(false);
+        }
+
+        [Command("dbget")]
+        public async Task dbget(CommandContext ctx)
+        {
+           var cards =  context.cards.ToList();
+            var embed = new DiscordEmbedBuilder
+            {
+                Title = "Cards in Database",
+                Description = "",
+
+            };
+            foreach (var item in cards)
+            {
+                embed.Description += "\n" + item.name;
+            }
+            await ctx.Channel.SendMessageAsync(embed).ConfigureAwait(false);
+        }
+
         [Command("rolesjoin")]
         public async Task join(CommandContext ctx)
         {
@@ -56,7 +88,7 @@ namespace MinSon.Commands
             await joinMessage.DeleteAsync().ConfigureAwait(false);
         }
 
-        [Command("rolessort")]
+        [Command("rolegive")]
         public async Task sort(CommandContext ctx, string rolename)
         {
             // get all users with no role
@@ -82,7 +114,7 @@ namespace MinSon.Commands
             }
         }
 
-        [Command("rolesunsort")]
+        [Command("roletake")]
         public async Task unsort(CommandContext ctx, string rolename)
         {
             // get all users with no role

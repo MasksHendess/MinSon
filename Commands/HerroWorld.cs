@@ -16,6 +16,17 @@ namespace MinSon.Commands
         [RequireCategories(ChannelCheckMode.Any, "Text Channels")]
         public async Task JAJAKAFFEKUNGEN(CommandContext ctx)
         {
+            if(ctx.Guild.Owner != ctx.User )
+            {
+                await ctx.Channel.SendMessageAsync("You are not Geralf").ConfigureAwait(false);
+            }
+            else
+            {
+                var msg = await new DiscordMessageBuilder()
+                 .WithContent($"Yaa Yaa Kaeffei keaungen")
+                 .HasTTS(true)
+                 .SendAsync(ctx.Channel);
+            }
             //Inline reply?
             //        var msg = await new DiscordMessageBuilder()
             //.WithContent($"I'm talking to *you*!")
@@ -23,10 +34,7 @@ namespace MinSon.Commands
             //.SendAsync(ctx.Channel);
 
             ///Txt->speach
-            var msg = await new DiscordMessageBuilder()
-                .WithContent($"Yaa Yaa Kaeffei keaungen")
-                .HasTTS(true)
-                .SendAsync(ctx.Channel);
+         
 
             //  await ctx.Channel.SendMessageAsync("JA JA KAFFEKUNGEN!").ConfigureAwait(false);
         }
@@ -43,7 +51,7 @@ namespace MinSon.Commands
         }
         [Command("say")]
         [Description("say string")]
-        public async Task say(CommandContext ctx, string text)
+        public async Task say(CommandContext ctx, [RemainingText] string text)
         {
             var msg = await new DiscordMessageBuilder()
                 .WithContent(text)
@@ -53,7 +61,7 @@ namespace MinSon.Commands
 
         [Command("sayfu")]
         [Description("fuck you +person+")]
-        public async Task fuckYou(CommandContext ctx, string name)
+        public async Task fuckYou(CommandContext ctx, [RemainingText] string name)
         {
             var msg = await new DiscordMessageBuilder()
                 .WithContent($"Fuck You " + name)

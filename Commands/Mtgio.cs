@@ -122,13 +122,43 @@ namespace MinSon.Commands
             ISetService service = serviceProvider.GetSetService();
             var result = await service.GenerateBoosterAsync(set);
 
-            if(result.IsSuccess && result.Value.Count > 0)
+            if (result.IsSuccess && result.Value.Count > 0)
             {
+                int basicLand = 0;
+                string cards = "";
+                var embedBooster = new DiscordEmbedBuilder
+                {
+                    Title =  result.Value.FirstOrDefault().SetName + " Booster",
+                    
+                };
+
                 foreach (var card in result.Value)
                 {
-                   await ctx.Channel.SendMessageAsync(card.ImageUrl.ToString()).ConfigureAwait(false); // JAJA spamaa
-                
+
+                    var seqie = result.Value.FirstOrDefault().Set;
+                    if (card.Type.Contains("Basic Land"))
+                        basicLand++;
+
+                    if (basicLand > 1 && card.Type.Contains("Basic Land"))
+                    {
+                        ICardService cardservice = serviceProvider.GetCardService();
+                        var lmao = await cardservice.Where(x => x.Set, set).Where(x => x.Rarity, "Common").AllAsync();
+                        card.ImageUrl = lmao.Value.FirstOrDefault().ImageUrl;
+                    }
+
+                    var embed = new DiscordEmbedBuilder
+                    {
+                        Title = card.Name,
+                        Description = card.ImageUrl.ToString(),
+                        ImageUrl = card.ImageUrl.AbsoluteUri,
+
+                    };
+                    embedBooster.Description += "\n" + embed.Description;
+                    cards +=  card.ImageUrl + " ";
+                    // await ctx.Channel.SendMessageAsync(card.ImageUrl.ToString()).ConfigureAwait(false); // JAJA spamaa
                 }
+                await ctx.Channel.SendMessageAsync(embed: embedBooster).ConfigureAwait(false);
+                await ctx.Channel.SendMessageAsync(basicLand.ToString()).ConfigureAwait(false);
             }
 
 

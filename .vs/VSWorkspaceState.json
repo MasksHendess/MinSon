@@ -1,12 +1,7 @@
 {
   "ExpandedNodes": [
-    "",
-    "\\bin",
-    "\\bin\\Debug",
-    "\\bin\\Debug\\net5.0",
-    "\\bin\\Release\\net5.0",
-    "\\Commands"
+    ""
   ],
-  "SelectedNode": "\\Commands\\Dice.cs",
+  "SelectedNode": "\\MinSon.sln",
   "PreviewInSolutionExplorer": false
 }
