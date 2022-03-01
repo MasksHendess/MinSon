@@ -75,6 +75,7 @@ namespace MinSon
             Commands.RegisterCommands<TeamCommands>();
             Commands.RegisterCommands<Polls>();
             Commands.RegisterCommands<HerroWorld>();
+            Commands.RegisterCommands<databaseCommands>();
             #endregion
             Client.ConnectAsync();
             // await lavalink.ConnectAsync(lavalinkConfig); // Make sure this is after Discord.ConnectAsync(). 

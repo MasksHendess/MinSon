@@ -14,6 +14,7 @@ namespace MinSon
         {
 
         }
-        public DbSet<Card> cards { get; set; }
+        public DbSet<Product> Products { get; set; }
+      //  public DbSet<Card> cards { get; set; }
     }
 }
