@@ -10,12 +10,16 @@ namespace MinSon.Services
 {
     public interface IScotchService
     {
-        Task<Product> GetProductAsync(CommandContext ctx, string Name);
-        Task<PartialProduct> GetProductByShowcaseNameAsync(string showcaseName, int nr);
-        List<DiscordEmbed> createProductEmbedsList(Product product);
+        //Get Product
+        Task<List<ShowcaseProduct>> GetAllShowcaseProductsByNameAsync(CommandContext ctx, string Name);
+        Task<ShowcaseProduct> GetShowcaseProductByNameAsync(CommandContext ctx, string Name);
 
-        Task<Product> GetRandomProduct();
+        // Create Embeds
+        DiscordEmbedBuilder createGeneralInfoEmbed(ShowcaseProduct product);
+        DiscordEmbedBuilder createProductEmbedsList(ShowcaseProduct product);
 
-        Task<Product> GetRandomIslayProduct(string region);
+        //Get Random Product
+        Task<ShowcaseProduct> GetRandomshowcaseProduct();
+        Task<ShowcaseProduct> GetRandomShowcaseProductFromRegion(string region);
     }
 }

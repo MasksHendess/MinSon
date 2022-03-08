@@ -4,6 +4,7 @@ using DSharpPlus.Entities;
 using MinSon.Attributes;
 using MinSon.Handlers.Dialogue;
 using MinSon.Handlers.Dialogue.Steps;
+using MinSon.Services;
 using System.Threading.Tasks;
 
 namespace MinSon.Commands

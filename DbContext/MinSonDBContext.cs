@@ -15,6 +15,8 @@ namespace MinSon
 
         }
         public DbSet<Product> Products { get; set; }
+        public DbSet<ShowcaseProduct> showcaseProducts { get; set; }
+        public DbSet<ZeldaQuote> zeldaQuotes { get; set; }
       //  public DbSet<Card> cards { get; set; }
     }
 }

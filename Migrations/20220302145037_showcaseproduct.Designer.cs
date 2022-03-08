@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MinSon;
 
 namespace MinSon.Migrations
 {
     [DbContext(typeof(MinSonDBContext))]
-    partial class MinSonDBContextModelSnapshot : ModelSnapshot
+    [Migration("20220302145037_showcaseproduct")]
+    partial class showcaseproduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,43 +77,7 @@ namespace MinSon.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("MinSon.Domain.Entities.ShowcaseProduct", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("birthYear")
-                        .HasColumnType("int");
-
-                    b.Property<string>("brandName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("owners")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("region")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("showcase_Item1_Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("showcase_Item1_Text")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("webbImage_Item1")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("webbUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("showcaseProducts");
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("MinSon.Domain.Entities.ZeldaQuote", b =>

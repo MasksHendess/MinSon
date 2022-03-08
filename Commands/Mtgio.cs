@@ -23,7 +23,7 @@ namespace MinSon.Commands
             //
             if (name.Contains("/")) // Cards that contain / are split cards or aftermath cards
             {
-               await ctx.Channel.SendMessageAsync("Invalid Card Name, use another fetch command if you are trying to fetch a aftermath / Split  card").ConfigureAwait(false);
+                await ctx.Channel.SendMessageAsync("Invalid Card Name, use another fetch command if you are trying to fetch a aftermath / Split  card").ConfigureAwait(false);
             }
             else
             {
@@ -33,15 +33,14 @@ namespace MinSon.Commands
 
                 //get data from api
                 var result = await service.Where(x => x.Name, name).AllAsync();
-
                 // Handle data from api
                 if (result.IsSuccess && result.Value.Count > 0)
                 {
                     //Handle Transform cards / dualfaced cards
                     if (result.Value.FirstOrDefault().Layout == "transform")
                     {
-                        var cardFrontside = result.Value.Where(x => x.ImageUrl != null).FirstOrDefault(); 
-                        
+                        var cardFrontside = result.Value.Where(x => x.ImageUrl != null).FirstOrDefault();
+
                         //Get the cards backside by checking that a item in result has a cmc not matching the cmc of the frontside (backsides typically dont have a cmc)
                         var cardBackside = result.Value.Where(x => x.ImageUrl != null && x.ManaCost != cardFrontside.ManaCost).FirstOrDefault();
 
@@ -68,8 +67,8 @@ namespace MinSon.Commands
         [Command("mtgas")]
         [Description("Fetch special case card from mtgio such as (a)ftermath and (s)plit card " +
             "Ex: ?mtgas a Claim/Fame")]
-        public async Task getAftermathCard(CommandContext ctx, 
-            [Description("determines the cards layout, input a for aftermath and s for splitcard.  ex: ??fetch a Claim/Fame")]string type,
+        public async Task getAftermathCard(CommandContext ctx,
+            [Description("determines the cards layout, input a for aftermath and s for splitcard.  ex: ??fetch a Claim/Fame")] string type,
             [RemainingText] string name)
         {
 
@@ -93,7 +92,7 @@ namespace MinSon.Commands
 
             IOperationResult<List<ICard>> result;
 
-            if (name.Contains("/") && layout!=null) // Cards that contain / are split cards or aftermath cards
+            if (name.Contains("/") && layout != null) // Cards that contain / are split cards or aftermath cards
             {
                 var splitcard = name.Split(' ', '/'); // api need claim || faim ! both
 
@@ -109,61 +108,77 @@ namespace MinSon.Commands
             else
             {
                 // No special cases? Find card normally
-                await getCardbyCardName(ctx , name);
+                await getCardbyCardName(ctx, name);
             }
         }
         #endregion
         #region Booster
         [Command("mtgbooster")]
         [Description("")]
-        public async Task getbooster(CommandContext ctx, [RemainingText] string set)    
+        public async Task getbooster(CommandContext ctx, [RemainingText] string set)
         {
             IMtgServiceProvider serviceProvider = new MtgServiceProvider();
             ISetService service = serviceProvider.GetSetService();
-            var result = await service.GenerateBoosterAsync(set);
 
-            if (result.IsSuccess && result.Value.Count > 0)
-            {
-                int basicLand = 0;
-                string cards = "";
-                var embedBooster = new DiscordEmbedBuilder
+            //for (int i = 0; i < players; i++)
+            //{
+
+                var result = await service.GenerateBoosterAsync(set);
+
+                if (result.IsSuccess && result.Value.Count > 0)
                 {
-                    Title =  result.Value.FirstOrDefault().SetName + " Booster",
-                    
-                };
-
-                foreach (var card in result.Value)
-                {
-
-                    var seqie = result.Value.FirstOrDefault().Set;
-                    if (card.Type.Contains("Basic Land"))
-                        basicLand++;
-
-                    if (basicLand > 1 && card.Type.Contains("Basic Land"))
+                    int basicLand = 0;
+                    string cards = "";
+                    var embedBooster = new DiscordEmbedBuilder
                     {
-                        ICardService cardservice = serviceProvider.GetCardService();
-                        var lmao = await cardservice.Where(x => x.Set, set).Where(x => x.Rarity, "Common").AllAsync();
-                        card.ImageUrl = lmao.Value.FirstOrDefault().ImageUrl;
-                    }
-
-                    var embed = new DiscordEmbedBuilder
-                    {
-                        Title = card.Name,
-                        Description = card.ImageUrl.ToString(),
-                        ImageUrl = card.ImageUrl.AbsoluteUri,
+                        Title = "Player" ,
+                        Description = result.Value.FirstOrDefault().SetName + " Booster",
 
                     };
-                    embedBooster.Description += "\n" + embed.Description;
-                    cards +=  card.ImageUrl + " ";
-                    // await ctx.Channel.SendMessageAsync(card.ImageUrl.ToString()).ConfigureAwait(false); // JAJA spamaa
-                }
-                await ctx.Channel.SendMessageAsync(embed: embedBooster).ConfigureAwait(false);
-                await ctx.Channel.SendMessageAsync(basicLand.ToString()).ConfigureAwait(false);
-            }
 
+                    foreach (var card in result.Value)
+                    {
+                        // Duplicate basic land protecc
+                        //var seqie = result.Value.FirstOrDefault().Set;
+                        //if (card.Type.Contains("Basic Land"))
+                        //    basicLand++;
+
+                        //if (basicLand > 1 && card.Type.Contains("Basic Land"))
+                        //{
+                        //    ICardService cardservice = serviceProvider.GetCardService();
+                        //    var lmao = await cardservice.Where(x => x.Set, set).Where(x => x.Rarity, "Common").AllAsync();
+                        //    card.ImageUrl = lmao.Value.FirstOrDefault().ImageUrl;
+                        //}
+
+                        var embed = new DiscordEmbedBuilder
+                        {
+                            Title = card.Name,
+                            Description = card.Text,
+                            ImageUrl = card.ImageUrl.ToString(),
+
+                        };
+                        cards += card.ImageUrl + " ";
+                    //"\n" + card.ImageUrl;
+                     await ctx.Channel.SendMessageAsync(embed.ImageUrl).ConfigureAwait(false); // JAJA spamaa
+                }
+                embedBooster.Description += cards;
+               // await ctx.Channel.SendMessageAsync(embed: embedBooster).ConfigureAwait(false);
+                    // await ctx.Channel.SendMessageAsync(basicLand.ToString()).ConfigureAwait(false);
+               // }
+
+            }
 
         }
         #endregion
+        [Command("mtgset")]
+        public async Task getSet(CommandContext ctx, [RemainingText] string set)
+        {
+            IMtgServiceProvider serviceProvider = new MtgServiceProvider();
+            ICardService service = serviceProvider.GetCardService();
+
+            var result = await service.Where(x => x.Set, set).AllAsync();
+            await ctx.Channel.SendMessageAsync("Did a thing?").ConfigureAwait(false);
+        }
     }
 
 }

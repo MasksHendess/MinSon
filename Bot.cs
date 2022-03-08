@@ -18,6 +18,8 @@ using DSharpPlus.Net;
 using DSharpPlus.Lavalink;
 using System.Net;
 using Microsoft.Extensions.DependencyInjection;
+using Discord.WebSocket;
+using DSharpPlus.Entities;
 
 namespace MinSon
 {
@@ -65,12 +67,20 @@ namespace MinSon
                 Services = services
             };
             Commands = Client.UseCommandsNext(commandsConfig);
+            Client.ComponentInteractionCreated += async (s, e) =>
+            {
+                // Button pressed
+                // DO stuff and things 
+                var boi = Client.Guilds.Values;
+                await e.Interaction.CreateResponseAsync(InteractionResponseType.UpdateMessage, new DiscordInteractionResponseBuilder().WithContent(boi.FirstOrDefault().ToString()));
+            };
+
 
 
 
             #region Commands 
-            //Register Command classes here
-            Commands.RegisterCommands<Dice>();
+           //Register Command classes here
+           Commands.RegisterCommands<Dice>();
             Commands.RegisterCommands<Mtgio>();
             Commands.RegisterCommands<TeamCommands>();
             Commands.RegisterCommands<Polls>();
@@ -138,5 +148,6 @@ namespace MinSon
         {
             return Task.CompletedTask;
         }
+
     }
 }

@@ -13,37 +13,6 @@ namespace MinSon.Commands
 {
     public class TeamCommands : BaseCommandModule
     {
-        private readonly MinSonDBContext context;
-
-        public TeamCommands(MinSonDBContext Kontexts)
-        {
-            context = Kontexts;
-        }
-        [Command("dbtest")]
-        public async Task dbtest (CommandContext ctx , string Name)
-        {
-            await context.cards.AddAsync(new Card { name = Name}).ConfigureAwait(false);
-            await context.SaveChangesAsync().ConfigureAwait(false);
-            await ctx.Channel.SendMessageAsync(Name + " added to database").ConfigureAwait(false);
-        }
-
-        [Command("dbget")]
-        public async Task dbget(CommandContext ctx)
-        {
-           var cards =  context.cards.ToList();
-            var embed = new DiscordEmbedBuilder
-            {
-                Title = "Cards in Database",
-                Description = "",
-
-            };
-            foreach (var item in cards)
-            {
-                embed.Description += "\n" + item.name;
-            }
-            await ctx.Channel.SendMessageAsync(embed).ConfigureAwait(false);
-        }
-
         [Command("rolesjoin")]
         public async Task join(CommandContext ctx)
         {
@@ -120,7 +89,7 @@ namespace MinSon.Commands
             // get all users with no role
             // remove role
             var role = GetRoleByName(ctx, rolename); // not hardcode very pro
-            if (role != null) 
+            if (role != null)
             {
                 var members = ctx.Guild.Members;
 
@@ -129,7 +98,7 @@ namespace MinSon.Commands
                     if (member.Value.Roles.Count() >= 0) // dont think if statment needed ? 
                     {
                         await member.Value.RevokeRoleAsync(role).ConfigureAwait(false);
-                        await ctx.Channel.SendMessageAsync("Revoked role "+role.Name+" from "+ member.Value.Username).ConfigureAwait(false);
+                        await ctx.Channel.SendMessageAsync("Revoked role " + role.Name + " from " + member.Value.Username).ConfigureAwait(false);
                     }
 
                 }

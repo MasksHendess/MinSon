@@ -5,82 +5,107 @@ using DSharpPlus.Entities;
 using DSharpPlus.Interactivity.Extensions;
 using MinSon.Domain.Entities;
 using MinSon.Services;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MinSon.Commands
 {
     public class databaseCommands : BaseCommandModule
     {
-        private readonly IScotchService scotchService;
-        private readonly MinSonDBContext dbContext;
+        #region props&Ctor
+        private readonly IScotchService scotchService; 
+        private readonly IZeldaService zeldaService;
       
-
-        public databaseCommands(IScotchService Scotchservice, MinSonDBContext DBContext)
-    {
-        dbContext = DBContext;
-        
+        public databaseCommands(IScotchService Scotchservice, IZeldaService ZeldaService)
+        {
+            zeldaService = ZeldaService;
             scotchService = Scotchservice;
         }
-        [Command("dbtest")]
-        public async Task dbtest(CommandContext ctx, string Name)
-        {
-            //await context.cards.AddAsync(new Card { name = Name}).ConfigureAwait(false);
-            //await context.SaveChangesAsync().ConfigureAwait(false);
-            await ctx.Channel.SendMessageAsync("Geralf wont let me add that to the database").ConfigureAwait(false);
-        }
+        #endregion
+        #region scotch
 
-        [Command("dbget")]
-        [Description("?dbget string Name Get info about these whiskies: \nClynelish\nDalmore \nGlenmorangie\nHighland Park \nOld Pulteney \nTomatin" +
+        [Command("scotchgetall")]
+        [Description("?scotchinfo string Name Get info about these whiskies: \nClynelish\nDalmore \nGlenmorangie\nHighland Park \nOld Pulteney \nTomatin" +
             "\n\nGlendronach\nFettercairn\nGlencadam\nRoyal Lochnagar" +
             "\n\nAberlour\nBenRiach\nCardhu\nDalwhinnie\nGlenfarclas\nGlenfiddich\nMacallan" +
             "\n\nArdbeg\nBowmore\nLaphroaig\nLagavulin\nBunnahabhain\nBruichladdich")]
-        public async Task dbget(CommandContext ctx, [RemainingText] string Name)
+        public async Task GetAllShowcaseProductsByNameAsync(CommandContext ctx, [RemainingText] string Name)
         {
-            Product product = await scotchService.GetProductAsync(ctx, Name);
+            var products = await scotchService.GetAllShowcaseProductsByNameAsync(ctx, Name);
+
+            await ctx.Channel.SendMessageAsync(
+                createGeneralInfoEmbed(products.FirstOrDefault())
+                ).ConfigureAwait(false);
+            foreach (var item in products)
+            {
+                postProductEmbedsinChannel(ctx, item);
+            }
+        }
+        [Command("scotchget")]
+        [Description("?scotch productname \nGet info about one product")]
+        public async Task dbgetShowcaseProduct(CommandContext ctx, [RemainingText] string Name)
+        {
+            var product = await scotchService.GetShowcaseProductByNameAsync(ctx, Name);
+            await ctx.Channel.SendMessageAsync(
+                createGeneralInfoEmbed(product)
+                ).ConfigureAwait(false);
             postProductEmbedsinChannel(ctx, product);
         }
 
-        [Command("db")]// ? ? ? Piplup Cheer you up
-        public async Task dbgetshowcase(CommandContext ctx, int nr, [RemainingText] string showcaseName)
+        [Command("randomscotch")]
+        [Description("get one random scotch")]
+        public async Task dbrandomshowcaseProduct(CommandContext ctx)
         {
-            PartialProduct product = await scotchService.GetProductByShowcaseNameAsync(showcaseName, nr);
+            // Product product = await scotchService.GetRandomProduct();
+            var product = await scotchService.GetRandomshowcaseProduct();
+            postProductEmbedsinChannel(ctx, product);
+        }
+        [Command("randomscotchregion")]
+        [Description("get one random scotch from specific region\nex: ?randomscotchregion regionname ")]
+        public async Task dbrandomProductFromRegion(CommandContext ctx, [RemainingText] string region)
+        {
+            ShowcaseProduct product = await scotchService.GetRandomShowcaseProductFromRegion(region);
+            postProductEmbedsinChannel(ctx, product);
+        }
+        #endregion
+        #region zelda
+        [Command("zelda")]
+        public async Task zelda(CommandContext ctx)
+        {
+            var result = await zeldaService.GetRandomQuouteAsync();
             var embed = new DiscordEmbedBuilder
             {
-                Title = product.showcase_Item1_Name,
-                Description = product.showcase_Item1_Text,
-                ImageUrl = product.webbImage_Item1
+                Description = result.quote +"\n" + result.character
             };
             await ctx.Channel.SendMessageAsync(embed).ConfigureAwait(false);
         }
-
-        [Command("dbrng")]
-        [Description("get one random item from db")]
-        public async Task dbrandom(CommandContext ctx)
+        #endregion
+        #region HelperFunctions
+        private DiscordEmbedBuilder createGeneralInfoEmbed( ShowcaseProduct product)
         {
-           Product product = await scotchService.GetRandomProduct();
-            postProductEmbedsinChannel(ctx, product);
-        }
-        [Command("dbrngregion")]
-        [Description("get one random item from specific region\nex: ?dbrngregion regionname ")]
-        public async Task dbrandomislay(CommandContext ctx, [RemainingText] string region)
-        {
-            Product product = await scotchService.GetRandomIslayProduct(region);
-            postProductEmbedsinChannel(ctx, product);
-        }
+            DiscordEmbedBuilder embed = new DiscordEmbedBuilder();
+            if(product!=null)
+            {
+                 embed = scotchService.createGeneralInfoEmbed(product);
+                //await ctx.Channel.SendMessageAsync(embed).ConfigureAwait(false);
+            }
+            else
+            {
+                embed.Title = "Failed to Find";
+            }
 
-
-        private async void postProductEmbedsinChannel(CommandContext ctx , Product product)
+            return embed;
+        }
+        private async void postProductEmbedsinChannel(CommandContext ctx , ShowcaseProduct product)
         {
             if (product != null)
             {
-                var embeds = scotchService.createProductEmbedsList(product);
-                foreach (DiscordEmbed embed in embeds)
-                {
-                    await ctx.Channel.SendMessageAsync(embed).ConfigureAwait(false);
-                }
+                var embed = scotchService.createProductEmbedsList(product);
+                await ctx.Channel.SendMessageAsync(embed).ConfigureAwait(false);
             }
         }
-
+        #endregion
     }
 }

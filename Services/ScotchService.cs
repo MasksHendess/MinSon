@@ -15,16 +15,27 @@ namespace MinSon.Services
         {
             scotchRepository = IscotchRepository;
         }
-        public async Task<Product> GetProductAsync(CommandContext ctx, string Name)
+        public async Task<List<ShowcaseProduct>> GetAllShowcaseProductsByNameAsync(CommandContext ctx, string Name)
         {
-            var result = await scotchRepository.GetProductAsync(Name);
+            var result = await scotchRepository.GetAllShowcaseProductsByNameAsync(Name);
             if (result != null)
-                return cast(result);
+                return result;
             else
                 await ctx.Channel.SendMessageAsync("Service failed to find " + Name).ConfigureAwait(false);
 
             return null;
         }
+        public async Task<ShowcaseProduct> GetShowcaseProductByNameAsync(CommandContext ctx, string Name)
+        {
+            var result = await scotchRepository.GetShowcaseProductByNameAsync(Name);
+            if (result != null)
+                return result;
+            else
+                await ctx.Channel.SendMessageAsync("Service failed to find " + Name).ConfigureAwait(false);
+
+            return null;
+        }
+
 
         private Product cast(Product product)
         {
@@ -32,16 +43,14 @@ namespace MinSon.Services
             return result;
         }
 
-        public List<DiscordEmbed> createProductEmbedsList(Product product)
+        public DiscordEmbedBuilder createGeneralInfoEmbed(ShowcaseProduct product)
         {
-            // The Big Spagett
-            var result = new List<DiscordEmbed>();
-
             var embedGeneral = new DiscordEmbedBuilder();
-            if (product.name != null && product.owners != null && product.webbUrl != null)
+            //general Info
+            if (product.brandName != null && product.owners != null && product.webbUrl != null)
             {
 
-                embedGeneral.Title = product.name;
+                embedGeneral.Title = product.brandName;
                 embedGeneral.Description = "\nGrundat: " + product.birthYear +
                           "\nÄgare:" + product.owners +
                           "\nRegion:" + product.region +
@@ -52,7 +61,11 @@ namespace MinSon.Services
             {
                 embedGeneral.Title = "Failed to find";
             }
-
+            return embedGeneral;
+        }
+        public  DiscordEmbedBuilder createProductEmbedsList(ShowcaseProduct product)
+        {
+            // The Big Spagett
             var embed = new DiscordEmbedBuilder();
             if (product.showcase_Item1_Name != null && product.showcase_Item1_Text != null)
             {
@@ -68,41 +81,17 @@ namespace MinSon.Services
             {
                 embed.Title = "Failed to Find"; // await ctx.Channel.SendMessageAsync("Failed to retieve information about " + Name).ConfigureAwait(false);
             }
-
-            var embed2 = new DiscordEmbedBuilder();
-            if (product.showcase_Item2_Name != null && product.showcase_Item2_Text != null)
-            {
-                embed2.Title = product.showcase_Item2_Name;
-                   embed2.Description = product.showcase_Item2_Text;
-                   embed2.ImageUrl = product.webbImage_Item2;
-
-
-
-             //   await ctx.Channel.SendMessageAsync(embed2).ConfigureAwait(false);
-            }
-            else
-            {
-                embed2.Title = "Failed to Find"; // await ctx.Channel.SendMessageAsync("Failed to retieve information about " + Name).ConfigureAwait(false);
-            }
-
-            //Add embeds to list
-            result.Add(embedGeneral);
-            result.Add(embed);
-            result.Add(embed2);
-            return result;
+            return embed;
         }
-        public Task<PartialProduct> GetProductByShowcaseNameAsync(string showcaseName, int nr)
+        public Task<ShowcaseProduct> GetRandomshowcaseProduct()
         {
-            return scotchRepository.GetProductByShowcaseNameAsync(showcaseName, nr);
-        }
-        public Task<Product> GetRandomProduct()
-        {
-            return scotchRepository.GetRandomProduct();
+            return scotchRepository.GetRandomshowcaseProduct();
         }
 
-       public Task<Product> GetRandomIslayProduct(string region)
+
+        public Task<ShowcaseProduct> GetRandomShowcaseProductFromRegion(string region)
         {
-          return  scotchRepository.GetRandomIslayProduct(region);
+          return  scotchRepository.GetRandomShowcaseProductFromRegion(region);
         }
     }
 }

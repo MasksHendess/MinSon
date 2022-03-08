@@ -8,9 +8,9 @@ namespace MinSon.Services
 {
    public interface IScotchRepository
     {
-        Task<Product> GetProductAsync(string Name);
-        Task<PartialProduct> GetProductByShowcaseNameAsync(string showcaseName, int nr);
-        Task<Product> GetRandomProduct();
-        Task<Product> GetRandomIslayProduct(string region);
+        Task<List<ShowcaseProduct>> GetAllShowcaseProductsByNameAsync(string Name);
+        Task<ShowcaseProduct> GetShowcaseProductByNameAsync( string Name);
+        Task<ShowcaseProduct> GetRandomshowcaseProduct();
+        Task<ShowcaseProduct> GetRandomShowcaseProductFromRegion(string region);
     }
 }
