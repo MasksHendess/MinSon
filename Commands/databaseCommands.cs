@@ -16,14 +16,30 @@ namespace MinSon.Commands
     {
         #region props&Ctor
         private readonly IScotchService scotchService; 
+        private readonly IDiscordService discordService;
         private readonly IZeldaService zeldaService;
       
-        public databaseCommands(IScotchService Scotchservice, IZeldaService ZeldaService)
+        public databaseCommands(IScotchService Scotchservice, IDiscordService discordService_, IZeldaService zeldaService_)
         {
-            zeldaService = ZeldaService;
+            zeldaService = zeldaService_;
+            discordService =discordService_;
             scotchService = Scotchservice;
         }
         #endregion
+        [Command("save")]
+        [Description("save users in database")]
+        public async Task hatarminbot(CommandContext ctx)
+        {
+            if (ctx.Guild.Owner != ctx.User)
+            {
+                await ctx.Channel.SendMessageAsync("You are not allowed to execute this command.").ConfigureAwait(false);
+            }
+            else
+            { 
+            var members = ctx.Channel.Users.ToList();
+            discordService.saveMembers(members);
+            }
+        }
         #region scotch
 
         [Command("scotchgetall")]

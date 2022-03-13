@@ -12,11 +12,13 @@ namespace MinSon
     {
         public MinSonDBContext(DbContextOptions<MinSonDBContext> options) : base(options)
         {
-
+           // Database.SetInitializer<>  (null)     SetInitializer<MinSonDBContext>(null);
         }
-        public DbSet<Product> Products { get; set; }
+      //  public DbSet<Product> Products { get; set; }
         public DbSet<ShowcaseProduct> showcaseProducts { get; set; }
         public DbSet<ZeldaQuote> zeldaQuotes { get; set; }
-      //  public DbSet<Card> cards { get; set; }
+
+        public DbSet<discordUser> discordUsers { get; set; }
+        //  public DbSet<Card> cards { get; set; }
     }
 }

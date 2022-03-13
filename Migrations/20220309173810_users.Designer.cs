@@ -9,8 +9,8 @@ using MinSon;
 namespace MinSon.Migrations
 {
     [DbContext(typeof(MinSonDBContext))]
-    [Migration("20220303132056_brandName")]
-    partial class brandName
+    [Migration("20220309173810_users")]
+    partial class users
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,66 +19,6 @@ namespace MinSon.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.14")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("MinSon.Domain.Entities.Product", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("birthYear")
-                        .HasColumnType("int");
-
-                    b.Property<string>("imageUrl_Item1")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("imageUrl_Item2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("owners")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("region")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("showcase_Item1_Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("showcase_Item1_Text")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("showcase_Item2_Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("showcase_Item2_Text")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("text1")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("text2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("text3")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("webbImage_Item1")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("webbImage_Item2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("webbUrl")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Products");
-                });
 
             modelBuilder.Entity("MinSon.Domain.Entities.ShowcaseProduct", b =>
                 {
@@ -132,6 +72,36 @@ namespace MinSon.Migrations
                     b.HasKey("id");
 
                     b.ToTable("zeldaQuotes");
+                });
+
+            modelBuilder.Entity("MinSon.Domain.Entities.discordUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AvatarHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AvatarUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DefaultAvatarUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("email")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("mention")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("userName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("discordUsers");
                 });
 #pragma warning restore 612, 618
         }

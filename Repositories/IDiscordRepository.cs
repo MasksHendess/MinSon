@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace MinSon.Services
 {
-   public interface IZeldaRepository
+   public interface IDiscordRepository
     { 
-        Task<ZeldaQuote> generateQuote();
+        void saveMembers(List<DiscordMember> members);
     }
 }

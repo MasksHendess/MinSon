@@ -1,4 +1,5 @@
-﻿using MinSon.Domain.Entities;
+﻿using DSharpPlus.Entities;
+using MinSon.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -24,6 +25,8 @@ namespace MinSon.Services
             var result = dbContext.zeldaQuotes.AsAsyncEnumerable().Where(x => x.id == randomId).FirstOrDefaultAsync();
             return result.Result;
         }
+
+       
 
     }
 }

@@ -21,13 +21,15 @@ namespace MinSon.Services
             return result;
         }
 
-       private async Task<ZeldaQuote> generateQuote()
+       
+        private async Task<ZeldaQuote> generateQuote()
         {
 
             //string result =quotes[randomId];
             
             return await zeldaRepository.generateQuote(); 
         }
+
     }
 }
 

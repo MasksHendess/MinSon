@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using MinSon.Services;
 using System;
 using System.Collections.Generic;
@@ -31,15 +32,25 @@ namespace MinSon
                 
                
             });
+
             services.AddScoped<ScotchService>();
             services.AddScoped<ScotchRepository>();
+
             services.AddScoped<ZeldaService>();
             services.AddScoped<ZeldaRepository>();
 
+            services.AddScoped<DiscordService>();
+            services.AddScoped<DiscordRepository>();
+
             services.AddScoped(typeof(IScotchService), typeof( ScotchService));
             services.AddScoped(typeof(IScotchRepository), typeof(ScotchRepository));
+
             services.AddScoped(typeof(IZeldaService), typeof(ZeldaService));
             services.AddScoped(typeof(IZeldaRepository), typeof(ZeldaRepository));
+
+            services.AddScoped(typeof(IDiscordService), typeof(DiscordService));
+            services.AddScoped(typeof(IDiscordRepository), typeof(DiscordRepository));
+
             buildServiceProvider(services);
             
         }

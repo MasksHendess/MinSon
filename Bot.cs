@@ -29,7 +29,7 @@ namespace MinSon
         public DiscordClient Client { get; private set; }
         public InteractivityExtension Interactivity { get; private set; }
         public CommandsNextExtension Commands { get; private set; }
-
+    
         public Bot(IServiceProvider services)
         {
             var json = string.Empty;
@@ -67,20 +67,15 @@ namespace MinSon
                 Services = services
             };
             Commands = Client.UseCommandsNext(commandsConfig);
-            Client.ComponentInteractionCreated += async (s, e) =>
-            {
-                // Button pressed
-                // DO stuff and things 
-                var boi = Client.Guilds.Values;
-                await e.Interaction.CreateResponseAsync(InteractionResponseType.UpdateMessage, new DiscordInteractionResponseBuilder().WithContent(boi.FirstOrDefault().ToString()));
-            };
+            //Client.ComponentInteractionCreated += async (s, e) =>
+            //{
 
-
-
-
+            //    await e.Interaction.CreateResponseAsync(InteractionResponseType.UpdateMessage, new DiscordInteractionResponseBuilder().WithContent("?"));
+               
+            //};
             #region Commands 
-           //Register Command classes here
-           Commands.RegisterCommands<Dice>();
+            //Register Command classes here
+            Commands.RegisterCommands<Dice>();
             Commands.RegisterCommands<Mtgio>();
             Commands.RegisterCommands<TeamCommands>();
             Commands.RegisterCommands<Polls>();
